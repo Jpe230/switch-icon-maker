@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/joy/styles';
 import Sheet from '@mui/joy/Sheet';
 import Box from '@mui/joy/Box';
@@ -37,6 +37,23 @@ const canvasStyle = {
 };
 
 export default function ImagePanel({ game }) {
+
+  const [zoomState, setZoom] = useState(100);
+  const [yState, setY] = useState(0);
+  const [xState, setX] = useState(0);
+
+  const handleZoomChange = (event, newValue) => {
+    setZoom(newValue);
+  };
+
+  const handleXChange = (event, newValue) => {
+    setX(newValue);
+  };
+
+  const handleYChange = (event, newValue) => {
+    setY(newValue);
+  };
+
   return (
     <ImageContainer>
       <Box
@@ -64,15 +81,15 @@ export default function ImagePanel({ game }) {
           }}
         >
           <div style={{ ...containerStyle }}>
+            <IconCanvas zIndex={1} zoom={zoomState} x={xState} y={yState} />
             <OverlayCanvas zIndex={2}/>
-            <IconCanvas zIndex={1} />
           </div>
 
         </Box>
 
-        <Slider />
-        <Slider />
-        <Slider />
+        <Slider  value={zoomState} onChange={handleZoomChange} min={0} max={200}/>
+        <Slider  value={xState} onChange={handleXChange}  min={0} max={200}/>
+        <Slider  value={yState} onChange={handleYChange}  min={0} max={200}/>
       </Box>
     </ImageContainer>
   );
