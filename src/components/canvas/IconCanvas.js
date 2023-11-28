@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import { loadImage, writeImageToCanvas } from '../../lib/ImageUtils'
 
 const canvasStyle = {
   position: 'absolute',
@@ -9,32 +10,46 @@ const canvasStyle = {
   top: 0,
 };
 
-
-export default function IconCanvas({ zIndex, zoom, x, y }) {
+export default function IconCanvas({ zIndex, zoom, x, y, urlImage, isInView}) {
 
   const canvasRef = useRef(null);
+  const [image, setImage] = useState(null);
+  const [currentImageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    if (!isInView) {
+      return
+    }
 
-    var width = canvas.offsetWidth;
-    var height = canvas.offsetHeight;
+    if (urlImage === undefined || urlImage === null) {
+      return;
+    }
 
-    ctx.canvas.width = width;
-    ctx.canvas.height = height;
+    const getImage = async () => {
+      let localCopy = await loadImage(urlImage, new Image());
+      let r = writeImageToCanvas(localCopy, canvasRef, true, x, y, zoom, true);
+      if (r.res) {
+        setImageUrl(urlImage);
+        setImage(localCopy);
+      }
+    }
 
-    ctx.clearRect(0, 0, width, height);
+    if (image === null || currentImageUrl !== urlImage) {
+      getImage();
+    }
 
-    var img = new Image();
-    img.src = 'https://cdn2.steamgriddb.com/file/sgdb-cdn/grid/8f1718b71f4c9b489cc079731d01337c.jpg';
+  }, [isInView, urlImage, currentImageUrl, image, x, y, zoom])
 
-    var imageWidth = width * (zoom / 100);
-    var imageHeight = height * (zoom / 100);
+  useEffect(() => {
+    if (image == null) {
+      return;
+    }
 
-    ctx.drawImage(img, x, y, imageWidth, imageHeight);
+    let localCopy = image;
+    writeImageToCanvas(localCopy, canvasRef, true, x, y, zoom, true);
 
-  }, [zoom, x, y]);
+  }, [x, y, zoom, image])
+
 
   return (
     <canvas ref={canvasRef} style={{ zIndex, ...canvasStyle }} />

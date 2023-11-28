@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import { loadImage, writeImageToCanvas } from '../../lib/ImageUtils'
 
 const canvasStyle = {
   position: 'absolute',
@@ -9,29 +10,32 @@ const canvasStyle = {
   top: 0,
 };
 
-export default function OverlayCanvas({ zIndex }) {
+export default function OverlayCanvas({ zIndex, isInView, cbCanvasSize }) {
 
   const canvasRef = useRef(null);
+  const [image, setImage] = useState(null);
+  const imageUrl = 'http://localhost:3000/overlay.png';
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    if (!isInView) {
+      return
+    }
 
-    var width = canvas.offsetWidth;
-    var height = canvas.offsetHeight;
+    const getImage = async () => {
+      let localCopy = await loadImage(imageUrl, new Image());
+      let res = writeImageToCanvas(localCopy, canvasRef, false);
+      if (res.res) {
+        setImage(localCopy);
+        cbCanvasSize(res.w, res.h);
+      }
+    }
 
-    ctx.canvas.width = width;
-    ctx.canvas.height = height;
+    if (image == null) {
+      getImage();
+    }
 
-    var img = new Image();
-    img.onload = function () {
-      ctx.drawImage(img, 0, 0, width, height);
-    };
+  }, [isInView, cbCanvasSize, image])
 
-    console.log("this");
-
-    img.src = 'http://localhost:3000/overlay.png';
-  }, [zIndex]);
 
   return (
     <canvas ref={canvasRef} style={{ zIndex, ...canvasStyle }} />

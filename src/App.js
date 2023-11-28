@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import { useSelector } from 'react-redux'
 
 import Container from '@mui/joy/Container';
 import Box from '@mui/joy/Box';
@@ -54,27 +56,31 @@ export default function App() {
   return (
     <CssVarsProvider disableTransitionOnChange theme={appTheme}>
       <CssBaseline />
+      
+      <Box sx={{
+        position: 'fixed',
+        zIndex: 100,
+        top: 0,
+        right: 0,
+        left: 0,
+        maxWidth: '1200px',
+        margin: 'auto'
+      }}>
+        <StepIndicator/>
+      </Box>
+
       <Container sx={{
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'stretch',
+        alignItems: 'stretch'
       }}>
-        <Box sx={{
-          display: 'flex',
-          flexGrow: '0',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-          <StepIndicator />
-        </Box>
         <Box sx={{
           display: 'flex',
           flexGrow: '1',
         }}>
-          <PanelContainer/>
+          <PanelContainer />
         </Box>
       </Container>
     </CssVarsProvider>
