@@ -1,12 +1,10 @@
-import * as React from 'react';
 import { useState } from 'react';
-import Button from '@mui/joy/Button';
-import SvgIcon from '@mui/joy/SvgIcon';
-import Snackbar from '@mui/joy/Snackbar';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/joy/Stack';
-import { styled } from '@mui/joy';
+
 import { parseCSV } from '../lib/csvUtils';
+
+import { Typography, Snackbar, SvgIcon, Button, Stack } from '@mui/joy';
+import { styled } from '@mui/joy';
+
 import { useDispatch } from 'react-redux'
 
 const VisuallyHiddenInput = styled('input')`

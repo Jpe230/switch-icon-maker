@@ -1,7 +1,4 @@
-import { Button } from '@mui/joy';
-import * as React from 'react';
-import Grid from '@mui/joy/Grid';
-import Typography from '@mui/joy/Typography';
+import { Button, Grid, Typography } from '@mui/joy';
 import { useDispatch } from 'react-redux'
 
 export default function OverlaySelection() {

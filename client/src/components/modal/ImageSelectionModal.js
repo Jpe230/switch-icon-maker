@@ -1,24 +1,12 @@
-import * as React from 'react';
 import { useState } from 'react';
-import Modal from '@mui/joy/Modal';
-import ModalClose from '@mui/joy/ModalClose';
-import Typography from '@mui/joy/Typography';
-import ModalOverflow from '@mui/joy/ModalOverflow';
-import ModalDialog from '@mui/joy/ModalDialog';
-import Input from '@mui/joy/Input';
-import Button from '@mui/joy/Button';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import Sheet from '@mui/joy/Sheet';
-import Stack from '@mui/joy/Stack';
+
+import { ModalOverflow, ModalDialog, ModalClose, Typography, Button, Select, Option, Modal, Input, Sheet, Stack } from '@mui/joy';
 
 import { useSelector } from 'react-redux'
 
 export default function ImageSelectionModal({ open, onClose, titleName, onImageChange }) {
 
   const apikey = useSelector((state) => state.apikey);
-
-  console.log(apikey);
 
   const [enableSelect, setEnabled] = useState(true);
   const [enableSearch, setEnabledSearch] = useState(true);
@@ -58,7 +46,6 @@ export default function ImageSelectionModal({ open, onClose, titleName, onImageC
   }
 
   const searchImages = async () => {
-
     setLoading(true);
     setEnabledSearch(true);
 
@@ -69,11 +56,18 @@ export default function ImageSelectionModal({ open, onClose, titleName, onImageC
         'Authorization': `Bearer ${apikey}`
       }
     });
+
     let jRes = await (res.json());
 
     setImageList(jRes.data.map(e => {
-      return { thumb: e.thumb, url: e.url };
+      let thumb = e.thumb.replace("https://cdn2.steamgriddb.com/", "/");
+      let url = e.url.replace("https://cdn2.steamgriddb.com/", "/");
+      return {
+        thumb,
+        url
+      };
     }));
+
     setEnabledSearch(false);
     setLoading(false);
   }

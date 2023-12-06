@@ -15,6 +15,14 @@ export const titles = {
     },
     addRange(state, titles) {
       return [...state, ...titles];
+    },
+    updateDataUri(state, titleToUpdate, dataUri) {
+      let titleIndex = state.findIndex(t => t.titleId === titleToUpdate);
+      if(titleIndex < 0){
+        return [...state];
+      }
+      state[titleIndex].dataUri = dataUri;
+      return [...state];
     }
   }
 }

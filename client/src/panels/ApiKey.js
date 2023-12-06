@@ -1,10 +1,8 @@
-import * as React from 'react';
 import { useState } from 'react';
-import Button from '@mui/joy/Button';
-import Stack from '@mui/joy/Stack';
-import Input from '@mui/joy/Input';
+
+import { Snackbar, Button, Stack, Input } from '@mui/joy';
+
 import { useDispatch } from 'react-redux'
-import Snackbar from '@mui/joy/Snackbar';
 
 export default function ApiKey() {
 
@@ -14,12 +12,10 @@ export default function ApiKey() {
   const dispatch = useDispatch();
 
   const handleClick = async (e) => {
-    if (apikey == "" || apikey == null || apikey == undefined) {
+    if (apikey === "" || apikey === null || apikey === undefined) {
       setOpen(true);
       return;
     }
-
-    console.log(apikey);
     dispatch.apikey.set(apikey);
     dispatch.panel.next();
   };

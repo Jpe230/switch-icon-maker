@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { useRef, useEffect, useState } from 'react';
-import { loadImage, writeImageToCanvas } from '../../lib/ImageUtils'
+import { useEffect, useState } from 'react';
+import { loadImage, writeImageToCanvas } from '../../lib/imageUtils'
 
 const canvasStyle = {
   position: 'absolute',
@@ -10,13 +9,16 @@ const canvasStyle = {
   top: 0,
 };
 
-export default function IconCanvas({ zIndex, zoom, x, y, urlImage, isInView}) {
-
-  const canvasRef = useRef(null);
+export default function IconCanvas({ zIndex, zoom, x, y, urlImage, isInView, canvasRef}) {
+  
   const [image, setImage] = useState(null);
   const [currentImageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
+  useEffect(() => { // Show canvas when is in view
+    if(canvasRef === undefined) {
+      return;
+    }
+
     if (!isInView) {
       return
     }
@@ -38,17 +40,22 @@ export default function IconCanvas({ zIndex, zoom, x, y, urlImage, isInView}) {
       getImage();
     }
 
-  }, [isInView, urlImage, currentImageUrl, image, x, y, zoom])
+  }, [isInView, urlImage, currentImageUrl, image, x, y, zoom, canvasRef])
 
-  useEffect(() => {
-    if (image == null) {
+  useEffect(() => { // Ran when canvasRef is created
+
+    if(canvasRef === undefined) {
+      return;
+    }
+
+    if (image === null) {
       return;
     }
 
     let localCopy = image;
     writeImageToCanvas(localCopy, canvasRef, true, x, y, zoom, true);
 
-  }, [x, y, zoom, image])
+  }, [x, y, zoom, image, canvasRef])
 
 
   return (

@@ -8,6 +8,7 @@ export const loadImage = async (url, elem) => {
     elem.onload = () => resolve(elem);
     elem.onerror = reject;
     elem.src = url;
+    //elem.setAttribute('crossorigin', 'anonymous');
   });
 }
 

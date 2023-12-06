@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { useRef, useEffect, useState } from 'react';
-import { loadImage, writeImageToCanvas } from '../../lib/ImageUtils'
+import { useEffect, useState } from 'react';
+import { loadImage, writeImageToCanvas } from '../../lib/imageUtils'
 
 const canvasStyle = {
   position: 'absolute',
@@ -10,13 +9,17 @@ const canvasStyle = {
   top: 0,
 };
 
-export default function OverlayCanvas({ zIndex, isInView, cbCanvasSize }) {
+export default function OverlayCanvas({ zIndex, isInView, cbCanvasSize, canvasRef }) {
 
-  const canvasRef = useRef(null);
   const [image, setImage] = useState(null);
-  const imageUrl = 'http://localhost:3000/overlay.png';
+  const imageUrl = '/overlay.png';
 
-  useEffect(() => {
+  useEffect(() => { // Show canvas when is in view
+
+    if (canvasRef === undefined) {
+      return;
+    }
+
     if (!isInView) {
       return
     }
@@ -30,11 +33,11 @@ export default function OverlayCanvas({ zIndex, isInView, cbCanvasSize }) {
       }
     }
 
-    if (image == null) {
+    if (image === null) {
       getImage();
     }
 
-  }, [isInView, cbCanvasSize, image])
+  }, [isInView, cbCanvasSize, image, canvasRef])
 
 
   return (

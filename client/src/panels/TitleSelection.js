@@ -1,15 +1,13 @@
-import * as React from 'react';
+import { useState, useEffect, createRef } from 'react';
+
+import { Sheet, Tabs, TabList, Tab, TabPanel, Grid } from '@mui/joy';
 import { styled } from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import Tabs from '@mui/joy/Tabs';
-import TabList from '@mui/joy/TabList';
-import Tab from '@mui/joy/Tab';
-import TabPanel from '@mui/joy/TabPanel';
-import Grid from '@mui/joy/Grid';
-import theme from '../theme';
+
 import ImagePanel from '../components/CreatorPanel';
 
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+import theme from '../theme';
 
 const TabContainer = styled(Sheet)(({ theme }) => ({
   backgroundColor:
@@ -24,9 +22,41 @@ const TabContainer = styled(Sheet)(({ theme }) => ({
 
 export default function TitleSelection() {
 
-  const games = useSelector((state) => state.titles);
+  const gamesStete = useSelector((state) => state.titles);
+  const [games, setGames] = useState([]);
+  const [indexView, setView] = useState(0);
+  const dispatch = useDispatch();
 
-  const [indexView, setView] = React.useState(0);
+  useEffect(() => {
+    if (gamesStete) {
+      let mGames = gamesStete.map(g => {
+
+        let bgRef = g.bgCanvasRef ?? createRef(null);
+        let overlayRef = g.overlayCanvasRef ?? createRef(null);
+        return {
+          ...g,
+          bgCanvasRef: bgRef,
+          overlayCanvasRef: overlayRef
+        }
+
+      });
+
+      setGames([...mGames]);
+    }
+  }, [gamesStete]);
+
+  const exportIcons = () => {
+    games.forEach((g) => {
+      let overlayCanvas = g.overlayCanvasRef.current;
+      let bgCanvas = g.bgCanvasRef.current;
+      let bgCtx = bgCanvas.getContext('2d');
+      bgCtx.drawImage(overlayCanvas, 0, 0);
+      var dataURL = bgCanvas.toDataURL("image/jpeg");
+      dispatch.titles.updateDataUri(g.titleId, dataURL);
+    });
+
+    dispatch.panel.next();
+  }
 
   let onTabChange = (e, index) => {
     setView(index);
@@ -49,7 +79,7 @@ export default function TitleSelection() {
               '&::-webkit-scrollbar': { display: 'none' },
               maxWidth: 200
             }}>
-              {games.map((game, i) =>
+              {games && games.map((game, i) =>
 
                 <Tab key={`tab-${game.titleName}-${i}`} sx={{
                   flex: 'none',
@@ -60,7 +90,7 @@ export default function TitleSelection() {
                 </Tab>
               )}
             </TabList>
-            {games.map((game, i) =>
+            {games && games.map((game, i) =>
               <TabPanel
                 keepMounted={true}
                 key={`tabpanel-${game.titleName}-${i}`}
@@ -68,7 +98,7 @@ export default function TitleSelection() {
                 sx={{
                   position: 'relative'
                 }}>
-                <ImagePanel game={game} isInView={indexView === i} />
+                <ImagePanel game={game} isInView={indexView === i} exportIcons={exportIcons} />
               </TabPanel>
             )}
           </Tabs>

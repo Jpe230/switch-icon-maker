@@ -1,13 +1,13 @@
-import * as React from 'react';
-import Stepper from '@mui/joy/Stepper';
-import Step, { stepClasses } from '@mui/joy/Step';
 import StepIndicator, { stepIndicatorClasses } from '@mui/joy/StepIndicator';
-import Typography from '@mui/joy/Typography';
-import FileUpload from '@mui/icons-material/FileUploadRounded';
-import Layers from '@mui/icons-material/LayersRounded';
+import Step, { stepClasses } from '@mui/joy/Step';
+import { Typography, Stepper } from '@mui/joy';
+
 import PhotoLibrary from '@mui/icons-material/PhotoLibraryRounded';
+import FileUpload from '@mui/icons-material/FileUploadRounded';
 import IosShare from '@mui/icons-material/IosShareRounded';
 import WebHook from '@mui/icons-material/WebhookRounded';
+import Layers from '@mui/icons-material/LayersRounded';
+
 import theme from '../theme';
 
 import { useSelector } from 'react-redux'
@@ -79,7 +79,7 @@ export default function DottedConnector() {
         },
       }}
     >
-      {steps.map((e, i) => 
+      {steps.map((e, i) =>
         <Step
           key={`step-${i}`}
           orientation="vertical"
@@ -88,15 +88,15 @@ export default function DottedConnector() {
           disabled={panelState < i}
           indicator={
             <StepIndicator variant={panelState > i ? "solid" : "outlined"} color="primary">
-              <e.icon/>
+              <e.icon />
             </StepIndicator>
           }
         >
-         <Typography level="title-sm"
-        >
-          {e.label}
-        </Typography>
-        
+          <Typography level="title-sm"
+          >
+            {e.label}
+          </Typography>
+
         </Step>
       )}
     </Stepper>

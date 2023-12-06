@@ -1,25 +1,18 @@
-import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-import { useSelector } from 'react-redux'
-
-import Container from '@mui/joy/Container';
-import Box from '@mui/joy/Box';
-import CssBaseline from '@mui/joy/CssBaseline';
-import IconButton from '@mui/joy/IconButton';
-
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-
-import appTheme from './theme';
+import { DarkModeRounded, LightModeRounded } from '@mui/icons-material';
+import { Container, Box, CssBaseline, IconButton } from '@mui/joy';
 
 import StepIndicator from './components/StepIndicator';
 import PanelContainer from './components/PanelContainer';
 
+import appTheme from './theme';
+
 function ColorSchemeToggle() {
   const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
     setMounted(true);
   }, []);
   if (!mounted) {
@@ -47,7 +40,7 @@ function ColorSchemeToggle() {
         boxShadow: 'sm',
       }}
     >
-      {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+      {mode === 'light' ? <DarkModeRounded /> : <LightModeRounded />}
     </IconButton>
   );
 }
@@ -56,7 +49,7 @@ export default function App() {
   return (
     <CssVarsProvider disableTransitionOnChange theme={appTheme}>
       <CssBaseline />
-      
+      <ColorSchemeToggle />
       <Box sx={{
         position: 'fixed',
         zIndex: 100,
@@ -66,7 +59,7 @@ export default function App() {
         maxWidth: '1200px',
         margin: 'auto'
       }}>
-        <StepIndicator/>
+        <StepIndicator />
       </Box>
 
       <Container sx={{
